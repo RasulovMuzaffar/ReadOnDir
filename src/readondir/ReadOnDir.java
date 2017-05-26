@@ -62,10 +62,15 @@ public class ReadOnDir {
 
     private static void readingFile(String path) {
         String str=null;
-        try (FileReader reader = new FileReader(path)) {
+        try (FileReader reader = new FileReader(path)) { 
             
+            int c;
+            while ((c = reader.read()) != -1) {
+                System.out.print((char) c);
+            }
+            System.out.println("-------------------");
             LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(path)));
-            BufferedReader br= new BufferedReader(reader);
+//            BufferedReader br= new BufferedReader(reader);
             Pattern p1 = Pattern.compile(".*:(\\d+).*");
             
             while (((str = lnr.readLine()) != null)) {
@@ -75,11 +80,6 @@ public class ReadOnDir {
                 }
             }
             
-            
-            int c;
-            while ((c = reader.read()) != -1) {
-                System.out.print((char) c);
-            }
             reader.close();
         } catch (Exception e) {
             System.out.println("owibka v FileRead " + e);
