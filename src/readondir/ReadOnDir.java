@@ -5,6 +5,7 @@
  */
 package readondir;
 
+import java.io.FileReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +29,8 @@ public class ReadOnDir {
         // TODO code application logic here
         try (WatchService service = FileSystems.getDefault().newWatchService()) {
             Map<WatchKey, Path> keyMap = new HashMap<>();
-            Path path = Paths.get("folder");
+            Path path = Paths.get("c:\\testFolder");
+//            Path path = Paths.get("G:\\02 200");
             keyMap.put(path.register(service,
                     StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE,
@@ -44,6 +46,14 @@ public class ReadOnDir {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path eventPath = (Path) event.context();
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
+                    try (FileReader reader = new FileReader(eventDir + "\\" + eventPath)) {
+                        int c;
+                        while ((c = reader.read()) != -1) {
+                            System.out.print((char) c);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("owibka v FileRead " + e);
+                    }
                 }
             } while (watchKey.reset());
         } catch (Exception e) {
