@@ -5,7 +5,9 @@
  */
 package readondir;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.LineNumberReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +17,8 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -29,8 +33,8 @@ public class ReadOnDir {
         // TODO code application logic here
         try (WatchService service = FileSystems.getDefault().newWatchService()) {
             Map<WatchKey, Path> keyMap = new HashMap<>();
-            Path path = Paths.get("c:\\testFolder");
-//            Path path = Paths.get("G:\\02 200");
+//            Path path = Paths.get("c:\\testFolder");
+            Path path = Paths.get("G:\\02 200");
             keyMap.put(path.register(service,
                     StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE,
@@ -46,19 +50,39 @@ public class ReadOnDir {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path eventPath = (Path) event.context();
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
-                    try (FileReader reader = new FileReader(eventDir + "\\" + eventPath)) {
-                        int c;
-                        while ((c = reader.read()) != -1) {
-                            System.out.print((char) c);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("owibka v FileRead " + e);
-                    }
+                    
+                    readingFile(eventDir + "\\" + eventPath);
                 }
             } while (watchKey.reset());
         } catch (Exception e) {
+            System.out.println("exception on WatchService " + e);
         }
 
     }
 
+    private static void readingFile(String path) {
+        String str=null;
+        try (FileReader reader = new FileReader(path)) {
+            
+            LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(path)));
+            BufferedReader br= new BufferedReader(reader);
+            Pattern p1 = Pattern.compile(".*:(\\d+).*");
+            
+            while (((str = lnr.readLine()) != null)) {
+                Matcher m = p1.matcher(str);
+                if (m.find()) {
+                    System.out.println(m.group(1));
+                }
+            }
+            
+            
+            int c;
+            while ((c = reader.read()) != -1) {
+                System.out.print((char) c);
+            }
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("owibka v FileRead " + e);
+        }
+    }
 }
