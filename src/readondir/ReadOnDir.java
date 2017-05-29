@@ -7,7 +7,6 @@ package readondir;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.LineNumberReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -18,7 +17,6 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,14 +24,15 @@ import java.util.regex.Pattern;
  *
  * @author Muzaffar
  */
-public class ReadOnDir {
+public class ReadOnDir extends Thread {
 
     /**
      * @param args the command line arguments
      */
     static String p = "c:\\testFolder";
 
-    public static void main(String[] args) {
+        public void run() {
+//    public static void main(String[] args) {
         pathListener();
     }
 
@@ -66,8 +65,6 @@ public class ReadOnDir {
         }
     }
 
-    
-
     private static void readingFile(String path) {
 
         String str = null;
@@ -85,7 +82,7 @@ public class ReadOnDir {
             while (((str = lnr.readLine()) != null)) {
                 m = p1.matcher(str);
                 if (m.find()) {
-                    System.out.println("код сообщении : "+m.group(1));
+                    System.out.println("код сообщении : " + m.group(1));
                 }
             }
 

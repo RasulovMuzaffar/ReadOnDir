@@ -5,10 +5,7 @@
  */
 package readondir;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.LineNumberReader;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,8 +17,11 @@ import java.util.regex.Pattern;
 public class CreateFile {
 
     static String p = "c:\\testFolder";
+    static ReadOnDir rod;
 
     public static void main(String[] args) {
+        rod = new ReadOnDir();
+        rod.start();
         Scanner sc = new Scanner(System.in);
         System.out.println("Пример команды!!! --->>>> (:212 0 7200:93:)");
         System.out.println("Здесть код сообщении является 212!");
