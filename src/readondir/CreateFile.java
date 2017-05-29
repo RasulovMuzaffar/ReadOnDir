@@ -23,6 +23,9 @@ public class CreateFile {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Пример команды!!! --->>>> (:212 0 7200:93:)");
+        System.out.println("Здесть код сообщении является 212!");
+        System.out.println("");
         System.out.println("Введите сообщение: ");
 
         String text = sc.nextLine();
