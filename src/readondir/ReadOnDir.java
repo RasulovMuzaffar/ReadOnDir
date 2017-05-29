@@ -31,7 +31,7 @@ public class ReadOnDir extends Thread {
      */
     static String p = "c:\\testFolder";
 
-        public void run() {
+    public void run() {
 //    public static void main(String[] args) {
         pathListener();
     }
@@ -43,8 +43,10 @@ public class ReadOnDir extends Thread {
 //            Path path = Paths.get("G:\\02 200");
             keyMap.put(path.register(service,
                     StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_DELETE,
-                    StandardWatchEventKinds.ENTRY_MODIFY), path);
+                    StandardWatchEventKinds.ENTRY_DELETE
+//                    ,
+//                    StandardWatchEventKinds.ENTRY_MODIFY
+            ), path);
 
             WatchKey watchKey;
 
@@ -69,27 +71,29 @@ public class ReadOnDir extends Thread {
 
         String str = null;
         Matcher m = null;
-        try (FileReader reader = new FileReader(path)) {
+        System.out.println("=-=-=-=-=-=-=- " + path.length());
+        if (path.length()==0) {
+            try (FileReader reader = new FileReader(path)) {
 
-            int c;
-            while ((c = reader.read()) != -1) {
-                System.out.print((char) c);
-            }
-            System.out.println("-------------------");
-            LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(path)));
-            Pattern p1 = Pattern.compile("\\D*:(\\d+).*");
-
-            while (((str = lnr.readLine()) != null)) {
-                m = p1.matcher(str);
-                if (m.find()) {
-                    System.out.println("код сообщении : " + m.group(1));
+                int c;
+                while ((c = reader.read()) != -1) {
+                    System.out.print((char) c);
                 }
-            }
+                System.out.println("-------------------");
+                LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(path)));
+                Pattern p1 = Pattern.compile("\\D*:(\\d+).*");
 
-            reader.close();
-        } catch (Exception e) {
-            System.out.println("owibka v FileRead " + e);
+                while (((str = lnr.readLine()) != null)) {
+                    m = p1.matcher(str);
+                    if (m.find()) {
+                        System.out.println("код сообщении : " + m.group(1));
+                    }
+                }
+
+                reader.close();
+            } catch (Exception e) {
+                System.out.println("owibka v FileRead " + e);
+            }
         }
     }
-
 }

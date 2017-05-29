@@ -21,17 +21,24 @@ public class CreateFile {
 
     public static void main(String[] args) {
         rod = new ReadOnDir();
+
         rod.start();
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Пример команды!!! --->>>> (:212 0 7200:93:)");
-        System.out.println("Здесть код сообщении является 212!");
-        System.out.println("");
-        System.out.println("Введите сообщение: ");
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Пример команды!!! --->>>> (:212 0 7200:93:)");
+            System.out.println("Здесть код сообщении является 212!");
+            System.out.println("");
+            System.out.println("Введите сообщение: ");
 
-        String text = sc.nextLine();
-//        reading(text);
-        writingFile(p + "\\" + reading(text) + ".txt", text);
+            String text = sc.nextLine();
 
+            if (text.equalsIgnoreCase("exit")) {
+                break;
+            } else {
+                writingFile(p + "\\" + reading(text) + ".txt", text);
+            }
+
+        }
     }
 
     private static void writingFile(String pth, String text) {
