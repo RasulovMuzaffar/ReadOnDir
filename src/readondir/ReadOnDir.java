@@ -80,7 +80,6 @@ public class ReadOnDir {
             }
             System.out.println("-------------------");
             LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(path)));
-//            BufferedReader br= new BufferedReader(reader);
             Pattern p1 = Pattern.compile("\\D*:(\\d+).*");
 
             while (((str = lnr.readLine()) != null)) {
