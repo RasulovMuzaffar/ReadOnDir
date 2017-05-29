@@ -61,6 +61,7 @@ public class ReadOnDir extends Thread {
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
 
                     readingFile(eventDir + "\\" + eventPath);
+                    
                     deletingFile(eventDir + "\\" + eventPath);
                 }
             } while (watchKey.reset());
@@ -73,8 +74,10 @@ public class ReadOnDir extends Thread {
 
         String str = null;
         Matcher m = null;
-        System.out.println("=-=-=-=-=-=-=- " + path.length());
-        if (path.length() == 0) {
+        File file = new File(path);
+        System.out.println("=-=-=-=-=-=-=- " + file.exists());
+        if(file.exists()){
+//        if (path.length() == 0) {
             try (FileReader reader = new FileReader(path)) {
 
                 int c;
@@ -98,6 +101,8 @@ public class ReadOnDir extends Thread {
             }
 
         }
+        
+//                    deletingFile(path);
     }
 
     private static void deletingFile(String path) {

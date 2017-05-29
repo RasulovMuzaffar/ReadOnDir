@@ -27,6 +27,7 @@ public class CreateFile {
             Scanner sc = new Scanner(System.in);
             System.out.println("Пример команды!!! --->>>> (:212 0 7200:93:)");
             System.out.println("Здесть код сообщении является 212!");
+            System.out.println("ВНИМАНИЕ: файл создается но удаляется сразу ");
             System.out.println("");
             System.out.println("Введите сообщение: ");
 
