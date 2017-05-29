@@ -8,6 +8,7 @@ package readondir;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -18,6 +19,8 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,10 +46,9 @@ public class ReadOnDir extends Thread {
             Path path = Paths.get(p);
 //            Path path = Paths.get("G:\\02 200");
             keyMap.put(path.register(service,
-                    StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_DELETE
-            //                    ,
-            //                    StandardWatchEventKinds.ENTRY_MODIFY
+                    StandardWatchEventKinds.ENTRY_CREATE
+            //                    ,StandardWatchEventKinds.ENTRY_DELETE
+            //                    ,StandardWatchEventKinds.ENTRY_MODIFY
             ), path);
 
             WatchKey watchKey;
@@ -61,7 +63,7 @@ public class ReadOnDir extends Thread {
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
 
                     readingFile(eventDir + "\\" + eventPath);
-                    
+
                     deletingFile(eventDir + "\\" + eventPath);
                 }
             } while (watchKey.reset());
@@ -75,34 +77,33 @@ public class ReadOnDir extends Thread {
         String str = null;
         Matcher m = null;
         File file = new File(path);
-        System.out.println("=-=-=-=-=-=-=- " + file.exists());
-        if(file.exists()){
-//        if (path.length() == 0) {
-            try (FileReader reader = new FileReader(path)) {
-
-                int c;
-                while ((c = reader.read()) != -1) {
-                    System.out.print((char) c);
+        System.out.println(">>>>> " + file.exists());
+        try (FileReader reader = new FileReader(path)) {
+            int c;
+//            while ((c = reader.read()) != -1) {
+//                System.out.print((char) c);
+//            }
+            System.out.println("");
+            LineNumberReader lnr = new LineNumberReader(new BufferedReader(reader));
+            Pattern p1 = Pattern.compile("\\D*:(\\d+)(.*)");
+      
+//            System.out.format("00000  %s \n",lnr.readLine());
+//            String line = lnr.readLine();
+            while ((str = lnr.readLine()) != null) {
+//                System.out.println("-------------------------------------");
+                m = p1.matcher(str);
+//                m = p1.matcher(line);
+                if (m.find()) {
+                    System.out.println("код сообщении : " + m.group(1));
+                    System.out.println(""+m.group(2));       
+                }else{
+                    System.out.println(""+str);
                 }
-                System.out.println("-------------------");
-                LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(path)));
-                Pattern p1 = Pattern.compile("\\D*:(\\d+).*");
-
-                while (((str = lnr.readLine()) != null)) {
-                    m = p1.matcher(str);
-                    if (m.find()) {
-                        System.out.println("код сообщении : " + m.group(1));
-                    }
-                }
-
-                reader.close();
-            } catch (Exception e) {
-                System.out.println("owibka v FileRead " + e);
             }
 
+        } catch (IOException ex) {
+            Logger.getLogger(ReadOnDir.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-//                    deletingFile(path);
     }
 
     private static void deletingFile(String path) {
