@@ -6,6 +6,7 @@
 package readondir;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.nio.file.FileSystems;
@@ -44,8 +45,8 @@ public class ReadOnDir extends Thread {
             keyMap.put(path.register(service,
                     StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE
-//                    ,
-//                    StandardWatchEventKinds.ENTRY_MODIFY
+            //                    ,
+            //                    StandardWatchEventKinds.ENTRY_MODIFY
             ), path);
 
             WatchKey watchKey;
@@ -60,6 +61,7 @@ public class ReadOnDir extends Thread {
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
 
                     readingFile(eventDir + "\\" + eventPath);
+                    deletingFile(eventDir + "\\" + eventPath);
                 }
             } while (watchKey.reset());
         } catch (Exception e) {
@@ -72,7 +74,7 @@ public class ReadOnDir extends Thread {
         String str = null;
         Matcher m = null;
         System.out.println("=-=-=-=-=-=-=- " + path.length());
-        if (path.length()==0) {
+        if (path.length() == 0) {
             try (FileReader reader = new FileReader(path)) {
 
                 int c;
@@ -94,6 +96,14 @@ public class ReadOnDir extends Thread {
             } catch (Exception e) {
                 System.out.println("owibka v FileRead " + e);
             }
+
         }
+    }
+
+    private static void deletingFile(String path) {
+        System.out.println("Файл " + path + " удаляется!!!");
+        File file = new File(path);
+        file.delete();
+        System.out.println("Файл удален!!!");
     }
 }
