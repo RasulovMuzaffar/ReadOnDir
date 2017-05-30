@@ -33,7 +33,7 @@ public class ReadOnDir extends Thread {
     /**
      * @param args the command line arguments
      */
-    static String p = "c:\\testFolder";
+    static String p = "c:\\testFolder\\in";
 
     public void run() {
 //    public static void main(String[] args) {
@@ -95,7 +95,7 @@ public class ReadOnDir extends Thread {
 //                m = p1.matcher(line);
                 if (m.find()) {
                     System.out.println("код сообщении : " + m.group(1));
-                    System.out.println(""+m.group(2));       
+                    System.out.println(""+m.group());       
                 }else{
                     System.out.println(""+str);
                 }

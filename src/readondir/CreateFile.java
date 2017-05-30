@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class CreateFile {
 
-    static String p = "c:\\testFolder";
+    static String p = "c:\\testFolder\\out";
     static ReadOnDir rod;
 
     public static void main(String[] args) {
@@ -37,6 +37,7 @@ public class CreateFile {
                 break;
             } else {
                 writingFile(p + "\\" + reading(text) + ".txt", text);
+                System.out.println("Сообщение было отправлено!");
             }
 
         }
