@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,13 +34,15 @@ public class ReadOnDir extends Thread {
     /**
      * @param args the command line arguments
      */
-    static String p = "c:\\testFolder\\in";
-
+//    static String p = "c:\\testFolder\\in";
+    static String p = "d:\\soob\\in";
+    
     public void run() {
 //    public static void main(String[] args) {
-        pathListener();
+//        pathListener();
+        readingFile("d:\\soob\\in\\01022400.007");
     }
-
+    
     private static void pathListener() {
         try (WatchService service = FileSystems.getDefault().newWatchService()) {
             Map<WatchKey, Path> keyMap = new HashMap<>();
@@ -50,30 +53,30 @@ public class ReadOnDir extends Thread {
             //                    ,StandardWatchEventKinds.ENTRY_DELETE
             //                    ,StandardWatchEventKinds.ENTRY_MODIFY
             ), path);
-
+            
             WatchKey watchKey;
-
+            
             do {
                 watchKey = service.take();
                 Path eventDir = keyMap.get(watchKey);
-
+                
                 for (WatchEvent<?> event : watchKey.pollEvents()) {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path eventPath = (Path) event.context();
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
-
+                    
                     readingFile(eventDir + "\\" + eventPath);
 
-                    deletingFile(eventDir + "\\" + eventPath);
+//                    deletingFile(eventDir + "\\" + eventPath);
                 }
             } while (watchKey.reset());
         } catch (Exception e) {
             System.out.println("exception on WatchService " + e);
         }
     }
-
+    
     private static void readingFile(String path) {
-
+        
         String str = null;
         Matcher m = null;
         File file = new File(path);
@@ -86,30 +89,32 @@ public class ReadOnDir extends Thread {
             System.out.println("");
             LineNumberReader lnr = new LineNumberReader(new BufferedReader(reader));
             Pattern p1 = Pattern.compile("\\D*:(\\d+)(.*)");
-      
-//            System.out.format("00000  %s \n",lnr.readLine());
-//            String line = lnr.readLine();
+            
             while ((str = lnr.readLine()) != null) {
-//                System.out.println("-------------------------------------");
                 m = p1.matcher(str);
-//                m = p1.matcher(line);
                 if (m.find()) {
-                    System.out.println("код сообщении : " + m.group(1));
-                    System.out.println(""+m.group());       
-                }else{
-                    System.out.println(""+str);
+                    System.out.println("код сообщении : " + encodingFile(m.group(1)));
+                    System.out.println("" + encodingFile(m.group()));
+                } else {
+                    System.out.println("" + encodingFile(str));
                 }
             }
-
+            
         } catch (IOException ex) {
             Logger.getLogger(ReadOnDir.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private static void deletingFile(String path) {
         System.out.println("Файл " + path + " удаляется!!!");
         File file = new File(path);
         file.delete();
         System.out.println("Файл удален!!!");
+    }
+    
+    private static String encodingFile(String str) throws UnsupportedEncodingException {
+//        return new String(new String(str.getBytes(), "Cp866").getBytes(), "Cp1251");
+//        return new String(new String(str.getBytes(), "cp866").getBytes(), "cp866");
+        return new String(str.getBytes("cp1251"),"cp866");
     }
 }
